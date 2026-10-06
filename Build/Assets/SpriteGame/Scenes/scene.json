@@ -1,0 +1,126 @@
+{
+  "actors": [
+    {
+      "type": "Actor",
+      "name": "BatPrototype",
+      "tag": "Enemy",
+      "persistent": true,
+      "active": true,
+      "prototype": true,
+      "transform": {
+        "position": [
+          640,
+          512
+        ],
+        "rotation": 20,
+        "scale": 4
+      },
+      "components": [
+        {
+          "type": "SpriteAnimatorRendererComponent",
+          "default_animation": "idle",
+          "animations": [
+            {
+              "texture_frames": "Animations/bat_idle.json",
+              "frames_per_second": 4,
+              "loop": true,
+              "name": "idle"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PlayerPrototype",
+      "type": "PlayerController",
+      "tag": "Player",
+      "prototype": true,
+      "active": true,
+      "speed": 1000,
+      "health" :  9,
+      "damping": 3,
+      "transform": {
+        "position": [
+          640,
+          512
+        ],
+        "rotation": 0,
+        "scale": 1.75
+      },
+      "components": [
+
+        {
+          "type": "Box2DPhysicsComponent",
+          "linear_damping": 0.7,
+          "angular_damping": 2,
+          "size": [ 38, 54 ],
+          "gravity_scale": -1,
+          "constrain_angle": true,
+          "shape": "capsule"
+        },
+        {
+          "type": "SpriteAnimatorRendererComponent",
+          "default_animation": "idle",
+          "animations": [
+            {
+              "texture_frames": "Animations/player_idle.json",
+              "frames_per_second": 4,
+              "loop": true,
+              "name": "idle"
+            },
+            {
+              "texture_frames": "Animations/player_run.json",
+              "frames_per_second": 4,
+              "loop": true,
+              "name": "run"
+            },
+            {
+              "texture_frames": "Animations/player_attack.json",
+              "frames_per_second": 10,
+              "loop": false,
+              "name": "attack"
+            },
+            {
+              "texture_frames": "Animations/player_hit.json",
+              "frames_per_second": 4.0,
+              "loop": false,
+              "name": "hit"
+            }
+
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DamagerPrototype",
+      "type": "Damager",
+      "tag": "Enemy",
+      "prototype": true,
+      "active": true,
+      "damage": 5,
+      "lifespan": 0.1,
+      "speed": 1000,
+      "damping": 3,
+      "transform": {
+        "position": [
+          540,
+          700
+        ],
+        "rotation": 0,
+        "scale": 1
+      },
+      "components": [
+        {
+          "type": "Box2DPhysicsComponent",
+          "linear_damping": 0.7,
+          "angular_damping": 2,
+          "size": [ 48, 48 ],
+          "gravity_scale": 0,
+          "constrain_angle": true,
+          "shape": "circle",
+          "is_sensor": true
+        }
+      ]
+    }
+  ]
+}

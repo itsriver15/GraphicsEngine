@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{3d8e06d4-e6d7-4c21-b50b-cee8e3808755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Scenes">
+      <UniqueIdentifier>{5b906936-8a8e-47da-b2b9-a99ff1cc0700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Animations">
+      <UniqueIdentifier>{b484eb14-95f4-486b-9c68-13283ef25e73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Tilemaps">
+      <UniqueIdentifier>{1a05068b-d42e-4f50-a988-f8bb0d290f90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpaceGame">
+      <UniqueIdentifier>{713b016d-350e-481f-8812-0ff272ef9f2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpaceGame\Headers">
+      <UniqueIdentifier>{04164fa3-f61f-43b0-b921-69107ea9a641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpaceGame\Sources">
+      <UniqueIdentifier>{208f2888-1b6d-49b5-ba40-ed4b852f6238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpriteGame">
+      <UniqueIdentifier>{accbfab8-4bd8-4a01-b0e8-18f73cdc1e73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpriteGame\Headers">
+      <UniqueIdentifier>{f66ad9b8-76c2-408c-a6d3-a672aa84f828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpriteGame\Sources">
+      <UniqueIdentifier>{8c687c02-bb4b-451a-a6d5-6bc6960e7408}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SpaceGame\SpaceGame.cpp">
+      <Filter>SpaceGame\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SpaceGame\Bullet.cpp">
+      <Filter>SpaceGame\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SpaceGame\Enemy.cpp">
+      <Filter>SpaceGame\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SpaceGame\Player.cpp">
+      <Filter>SpaceGame\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Assets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\SpriteGame.cpp">
+      <Filter>SpriteGame\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\EnemyController.cpp">
+      <Filter>SpriteGame\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\PlayerController.cpp">
+      <Filter>SpriteGame\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\FlyingEnemyController.cpp">
+      <Filter>SpriteGame\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\CharacterBase.cpp">
+      <Filter>SpriteGame\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\Damager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\PortalController.cpp">
+      <Filter>SpriteGame\Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SpaceGame\Enemy.h">
+      <Filter>SpaceGame\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceGame\Player.h">
+      <Filter>SpaceGame\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceGame\SpaceGame.h">
+      <Filter>SpaceGame\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceGame\Bullet.h">
+      <Filter>SpaceGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\SpriteGame.h">
+      <Filter>SpriteGame\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\EnemyController.h">
+      <Filter>SpriteGame\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\PlayerController.h">
+      <Filter>SpriteGame\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\FlyingEnemyController.h">
+      <Filter>SpriteGame\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\CharacterBase.h">
+      <Filter>SpriteGame\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\Damager.h">
+      <Filter>SpriteGame\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\PortalController.h">
+      <Filter>SpriteGame\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Build\Assets\Animations\bat_idle.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Scenes\level.json">
+      <Filter>Assets\Scenes</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Scenes\scene.json">
+      <Filter>Assets\Scenes</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\player_idle.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\player_run.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Tilemaps\world.json">
+      <Filter>Assets\Tilemaps</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\player_attack.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\portal_appear.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\portal_close.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\portal_idle.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\flying_enemy_attack.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\flying_enemy_idle.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\flying_enemy_run.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\enemy_attack.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\enemy_hit.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\enemy_idle.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\enemy_run.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\flying_enemy_hit.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\player_hit.json">
+      <Filter>Assets\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Tilemaps\world2.json">
+      <Filter>Assets\Tilemaps</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Scenes\level2.json">
+      <Filter>Assets\Scenes</Filter>
+    </None>
+  </ItemGroup>
+</Project>

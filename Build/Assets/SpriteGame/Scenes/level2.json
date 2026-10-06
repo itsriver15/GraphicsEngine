@@ -1,0 +1,212 @@
+{
+  "actors": [
+    {
+      "type": "Actor",
+      "name": "Tilemap",
+      "tag": "Tilemap",
+      "persistent": false,
+      "active": true,
+      "prototype": false,
+      "transform": {
+        "position": [ 0, 0 ],
+        "rotation": 0,
+        "scale": 3.1
+      },
+      "components": [
+        {
+          "type": "TilemapRendererComponent",
+          "tilemap_name": "tilemaps/world2.json"
+        }
+      ]
+    },
+    {
+      "name": "CratePrototype",
+      "type": "Actor",
+      "tag": "Prop",
+      "prototype": true,
+      "active": true,
+      "transform": {
+        "position": [
+          840,
+          512
+        ],
+        "rotation": 0,
+        "scale": 1
+      },
+      "components": [
+        {
+          "type": "SpriteRendererComponent",
+          "texture": "textures/crate03.png"
+        },
+        {
+          "type": "Box2DPhysicsComponent",
+          "linear_damping": 0.7,
+          "angular_damping": 2,
+          "size": [ 106, 106 ],
+          "gravity_scale": -1
+
+        }
+      ]
+    },
+    {
+      "name": "Crate",
+      "type": "CratePrototype",
+      "tag": "Prop",
+      "prototype": false,
+      "active": true,
+      "transform": {
+        "position": [
+          200,
+          412
+        ],
+        "rotation": 0,
+        "scale": 0.75
+      }
+    },
+    {
+      "name": "Crate",
+      "type": "CratePrototype",
+      "tag": "Prop",
+      "prototype": false,
+      "active": true,
+      "transform": {
+        "position": [
+          1260,
+          812
+        ],
+        "rotation": 0,
+        "scale": 0.75
+      }
+    },
+    {
+      "name": "PortalPrototype",
+      "type": "PortalController",
+      "tag": "Portal",
+      "prototype": true,
+      "active": true,
+      "transform": {
+        "position": [ 840, 512 ],
+        "rotation": 0,
+        "scale": 1
+      },
+      "components": [
+        {
+          "type": "SpriteAnimatorRendererComponent",
+          "default_animation": "idle",
+          "animations": [
+            {
+              "texture_frames": "Animations/portal2_idle.json",
+              "frames_per_second": 4,
+              "loop": true,
+              "name": "idle"
+            },
+            {
+              "texture_frames": "Animations/portal_appear.json",
+              "frames_per_second": 4,
+              "loop": false,
+              "name": "appear"
+            },
+            {
+              "texture_frames": "Animations/portal_close.json",
+              "frames_per_second": 4,
+              "loop": false,
+              "name": "close"
+            }
+          ]
+        },
+        {
+          "type": "Box2DPhysicsComponent",
+          "size": [ 106, 106 ],
+          "gravity_scale": 0,
+          "is_sensor": true
+        },
+        {
+          "type": "SpriteRendererComponent",
+          "fliph":  true
+        }
+      ]
+    },
+    {
+      "name": "Portal",
+      "type": "PortalPrototype",
+      "tag": "Portal",
+      "prototype": false,
+      "active": true,
+      "transform": {
+        "position": [
+          1350,
+          150
+        ],
+        "rotation": 0,
+        "scale": 2.5
+      }
+
+    },
+    {
+      "name": "EnemyPrototype",
+      "type": "EnemyController",
+      "tag": "Enemy",
+      "prototype": true,
+      "active": true,
+      "speed": 1000,
+      "health": 10.0,
+      "damping": 3,
+      "transform": {
+        "position": [
+          540,
+          512
+        ],
+        "rotation": 0,
+        "scale": 2
+      },
+      "components": [
+
+        {
+          "type": "Box2DPhysicsComponent",
+          "linear_damping": 0.7,
+          "angular_damping": 2,
+          "size": [ 38, 50 ],
+          "gravity_scale": -1,
+          "constrain_angle": true,
+          "shape": "capsule"
+        },
+        {
+          "type": "SpriteAnimatorRendererComponent",
+          "default_animation": "idle",
+          "origin": [
+            0.5,
+            0.6
+          ],
+          "animations": [
+            {
+              "texture_frames": "Animations/enemy_idle.json",
+              "frames_per_second": 4,
+              "loop": true,
+              "name": "idle"
+            },
+            {
+              "texture_frames": "Animations/enemy_run.json",
+              "frames_per_second": 4,
+              "loop": true,
+              "name": "run"
+            },
+            {
+              "texture_frames": "Animations/enemy_attack.json",
+              "frames_per_second": 4,
+              "loop": false,
+              "name": "attack"
+            },
+            {
+              "texture_frames": "Animations/enemy_hit.json",
+              "frames_per_second": 4,
+              "loop": false,
+              "name": "hit"
+            }
+
+          ]
+        }
+      ]
+    }
+
+  ]
+}

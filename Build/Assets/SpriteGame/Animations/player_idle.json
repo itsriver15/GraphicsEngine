@@ -1,0 +1,7 @@
+{
+  "texture_name": "Textures/player/IDLE.png",
+  "columns": 6,
+  "rows": 1,
+  "start_frame": 0,
+  "total_frames" :  6
+}

@@ -1,0 +1,7 @@
+{
+  "texture_name": "textures/purple_portal.png",
+  "columns": 8,
+  "rows": 3,
+  "start_frame": 16,
+  "total_frames": 8
+}

@@ -1,10 +1,4 @@
 #include "../Engine/Engine.h"
-#include "SpaceGame/Player.h"
-#include "SpaceGame/Enemy.h"
-#include "Assets.h"
-
-#include "SpaceGame/SpaceGame.h"
-#include "SpriteGame/SpriteGame.h"
 
 #include <iostream>
 #include <random>
@@ -25,10 +19,7 @@ int main() {
     //INITALIZE
     Engine::Get().Initialize();
 
-    
-
-    unique_ptr<Game> game = make_unique<SpriteGame>();
-    game->Initialize();
+   
 
  
     //MAIN LOOP
@@ -53,8 +44,7 @@ int main() {
         float dt = Engine::Get().GetTime().GetDeltaTime();
 
         //GAME
-        game->Update(dt);
-        Engine::Get().GetPS().Update(Engine::Get().GetTime().GetDeltaTime());
+
 
 
         //RENDER
@@ -64,7 +54,6 @@ int main() {
 
 
       
-        game->Draw(Engine::Get().GetRenderer());
         
 
         Engine::Get().GetPS().Draw(Engine::Get().GetRenderer());
@@ -74,8 +63,6 @@ int main() {
        
     }
     //SHUTDOWN
-
-    game.reset();
 
     Engine::Get().Shutdown();
 

@@ -22,6 +22,9 @@ namespace nu {
 		void Clear() const;
 		void Present() const;
 
+		bool BeginFrame();
+		bool EndFrame() const;
+
 		void SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255) const;
 		void SetColor(float r, float g, float b, float = 1.0f) const;
 
@@ -52,6 +55,10 @@ namespace nu {
 
 		Vector2 m_camera;
 		bool m_cameraEnabled = true;
+
+		SDL_GPUDevice* m_gpuDevice = nullptr;
+		SDL_GPUCommandBuffer* m_cmdBuffer = nullptr;
+		SDL_GPURenderPass* m_renderPass = nullptr;
 
 		int m_width = 0;
 		int m_height = 0;

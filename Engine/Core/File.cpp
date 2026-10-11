@@ -146,4 +146,26 @@ namespace nu
 
 		return true;
 	}
+	bool ReadBinaryFile(const std::string& path, std::vector<uint8_t>& data)
+	{
+		std::ifstream file(path, std::ios::binary | std::ios::ate);
+
+		if (!file.is_open()) return false;
+
+		std::streamsize fileSize = file.tellg();
+
+		if (fileSize <= 0) return false;
+
+		data.resize(static_cast<size_t>(fileSize));
+
+		file.seekg(0, std::ios::beg);
+
+		if (!file.read(reinterpret_cast<char*>(data.data()), fileSize)){
+			data.clear();
+			return false;
+		}
+
+		return true;
+	}
 }
+

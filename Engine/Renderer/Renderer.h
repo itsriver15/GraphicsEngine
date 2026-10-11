@@ -14,6 +14,7 @@ namespace nu {
 	{
 		friend class Text;
 		friend class Texture;
+		friend class Shader;
 
 	public:
 		bool Initialize(int, int);
@@ -47,6 +48,15 @@ namespace nu {
 		void SetCamera(const Vector2& camera) { m_camera = camera; }
 
 		void EnableCamera(bool enable = true) { m_cameraEnabled = enable; }
+
+		SDL_GPUDevice* GetGPUDevice() const { return m_gpuDevice; }
+		SDL_Window* GetWindow() const { return window; }
+
+		void SetPipeline(const class Pipeline& pipeline);
+		void SetVertexBuffer(const class VertexBuffer& vertexBuffer);
+		void Draw(uint32_t vertexCount);
+
+
 
 	private:
 		SDL_Window* window = nullptr;

@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "../Renderer/Renderer.h"
 #include "../Renderer/Texture.h"
+#include "../Renderer/Pipeline.h" 
+#include "../Renderer/VertexBuffer.h" 
+#include "../Renderer/Shader.h" 
 #include "../Math/Vector2.h"
 #include "../Renderer/Model.h"
 #include "../Math/MathUtils.h"
@@ -181,29 +184,44 @@ bool Renderer::BeginFrame()
 	m_cmdBuffer = SDL_AcquireGPUCommandBuffer(m_gpuDevice);
 	if (!m_cmdBuffer)
 	{
-		std::cerr << "Could not acquire command buffer: " << SDL_GetError() << std::endl;
+		std::cerr << "Could not acquire command buffer: "
+			<< SDL_GetError() << std::endl;
 		return false;
 	}
-
 
 	SDL_GPUTexture* swapchainTexture = nullptr;
-	if (!SDL_WaitAndAcquireGPUSwapchainTexture(m_cmdBuffer, window, &swapchainTexture, nullptr, nullptr))
+	if (!SDL_WaitAndAcquireGPUSwapchainTexture(
+		m_cmdBuffer, window, &swapchainTexture, nullptr, nullptr))
 	{
-		std::cerr << "Could not acquire swapchain texture: " << SDL_GetError() << std::endl;
+		std::cerr << "Could not acquire swapchain texture: "
+			<< SDL_GetError() << std::endl;
+		SDL_CancelGPUCommandBuffer(m_cmdBuffer);
+		m_cmdBuffer = nullptr;
 		return false;
 	}
 
-	if (swapchainTexture != nullptr)
+	if (swapchainTexture == nullptr)
 	{
-		// configure the color target attachments (This handles clearing the screen)
-		SDL_GPUColorTargetInfo color_target_info{};
-		color_target_info.texture = swapchainTexture;
-		color_target_info.clear_color = SDL_FColor{ 1.0f, 0.0f, 0.0f, 1.0f };
-		color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
-		color_target_info.store_op = SDL_GPU_STOREOP_STORE;
+		m_renderPass = nullptr;
+		return true;
+	}
 
-		m_renderPass = SDL_BeginGPURenderPass(m_cmdBuffer, &color_target_info, 1, nullptr);
-		SDL_EndGPURenderPass(m_renderPass);
+	SDL_GPUColorTargetInfo colorTargetInfo{};
+	colorTargetInfo.texture = swapchainTexture;
+	colorTargetInfo.clear_color = SDL_FColor{ 0.0f, 0.0f, 0.0f, 1.0f };
+	colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
+	colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
+
+	m_renderPass = SDL_BeginGPURenderPass(
+		m_cmdBuffer, &colorTargetInfo, 1, nullptr);
+
+	if (!m_renderPass)
+	{
+		std::cerr << "Could not begin render pass: "
+			<< SDL_GetError() << std::endl;
+		SDL_CancelGPUCommandBuffer(m_cmdBuffer);
+		m_cmdBuffer = nullptr;
+		return false;
 	}
 
 	return true;
@@ -211,13 +229,46 @@ bool Renderer::BeginFrame()
 
 bool Renderer::EndFrame() const
 {
+	if (m_renderPass != nullptr)
+	{
+		SDL_EndGPURenderPass(m_renderPass);
+	}
+
 	if (!SDL_SubmitGPUCommandBuffer(m_cmdBuffer))
 	{
-		std::cerr << "Could not submit command buffer: " << SDL_GetError() << std::endl;
+		std::cerr << "Could not submit command buffer: "
+			<< SDL_GetError() << std::endl;
 		return false;
 	}
 
 	return true;
+}
+
+void Renderer::SetPipeline(const Pipeline& pipeline)
+{
+	// bind the pipeline to the current render pass
+	// the pipeline sets the shaders and render settings used by the draw calls that follow
+	SDL_BindGPUGraphicsPipeline(m_renderPass, pipeline.GetGPUPipeline());
+}
+
+void Renderer::SetVertexBuffer(const VertexBuffer& vertexBuffer)
+{
+	// describe which buffer to bind and where to start reading from
+	SDL_GPUBufferBinding binding{.buffer = vertexBuffer.m_gpuBuffer, .offset = 0};
+	SDL_BindGPUVertexBuffers(m_renderPass, 0, &binding, 1);
+}
+
+void Renderer::Draw(uint32_t vertexCount)
+{
+	// draw using the currently bound pipeline and vertex buffer with SDL_DrawGPUPrimitives()
+	// parameters:
+	//   render pass    - the current render pass (m_renderPass)
+	//   vertex count   - the number of vertices to draw (vertexCount)
+	//   instance count - 1, draw one copy (more than 1 is used for instancing)
+	//   first vertex   - 0, start at the first vertex in the buffer
+	//   first instance - 0, start at the first instance
+
+	SDL_DrawGPUPrimitives(m_renderPass, vertexCount, 1, 0, 0);
 }
 
 

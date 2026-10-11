@@ -14,6 +14,9 @@
 #include "../Engine/Renderer/Text.h"
 #include "../Engine/Renderer/ParticleSystem.h"
 #include "../Engine/Renderer/Texture.h"
+#include "../Engine/Renderer/Shader.h"
+#include "../Engine/Renderer/Pipeline.h"
+#include "../Engine/Renderer/VertexBuffer.h"
 
 //input
 #include "../Engine/Input/Input.h"

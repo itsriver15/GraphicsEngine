@@ -54,6 +54,7 @@ namespace nu {
 
 		void SetPipeline(const class Pipeline& pipeline);
 		void SetVertexBuffer(const class VertexBuffer& vertexBuffer);
+		void SetVertexUniform(uint32_t slot, const void* data, uint32_t size);
 		void Draw(uint32_t vertexCount);
 
 

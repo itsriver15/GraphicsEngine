@@ -258,6 +258,11 @@ void Renderer::SetVertexBuffer(const VertexBuffer& vertexBuffer)
 	SDL_BindGPUVertexBuffers(m_renderPass, 0, &binding, 1);
 }
 
+void nu::Renderer::SetVertexUniform(uint32_t slot, const void* data, uint32_t size)
+{
+	SDL_PushGPUVertexUniformData(m_cmdBuffer, slot, data, size);
+}
+
 void Renderer::Draw(uint32_t vertexCount)
 {
 	// draw using the currently bound pipeline and vertex buffer with SDL_DrawGPUPrimitives()

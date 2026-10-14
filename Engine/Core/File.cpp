@@ -146,26 +146,36 @@ namespace nu
 
 		return true;
 	}
-	bool ReadBinaryFile(const std::string& path, std::vector<uint8_t>& data)
+	std::vector<uint8_t> ReadBinaryFile(const std::string& path)
 	{
+		// open the file in binary mode (no newline conversion) with the read position at the end (ate = "at end")
 		std::ifstream file(path, std::ios::binary | std::ios::ate);
 
-		if (!file.is_open()) return false;
-
-		std::streamsize fileSize = file.tellg();
-
-		if (fileSize <= 0) return false;
-
-		data.resize(static_cast<size_t>(fileSize));
-
-		file.seekg(0, std::ios::beg);
-
-		if (!file.read(reinterpret_cast<char*>(data.data()), fileSize)){
-			data.clear();
-			return false;
+		// if the file could not be opened, return an empty vector
+		if (!file.is_open())
+		{
+			return {};
 		}
 
-		return true;
+		// the read position is at the end, so tellg() gives the file size in bytes
+		std::streamsize size = file.tellg();
+
+		// move the read position back to the beginning so the read starts at the first byte
+		file.seekg(0, std::ios::beg);
+
+		// create a vector large enough to hold every byte in the file
+		std::vector<uint8_t> bytes(size);
+
+		// read all bytes into the vector
+		// read() takes a char*, so reinterpret_cast the uint8_t* from bytes.data()
+		if (!file.read(reinterpret_cast<char*>(bytes.data()), size))
+		{
+			// the read failed, so return an empty vector
+			return {};
+		}
+
+		// return the bytes read from the file
+		return bytes;
 	}
 }
 

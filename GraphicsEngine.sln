@@ -6,6 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{E76B42B8-A54F-485A-89AB-CD99556FABC2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "Graphics\Graphics.vcxproj", "{72B2B086-86D7-430F-A89C-2AEFCDDAF2E6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD} = {7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders", "Shaders\Shader.vcxproj", "{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +36,14 @@ Global
 		{72B2B086-86D7-430F-A89C-2AEFCDDAF2E6}.Release|x64.Build.0 = Release|x64
 		{72B2B086-86D7-430F-A89C-2AEFCDDAF2E6}.Release|x86.ActiveCfg = Release|Win32
 		{72B2B086-86D7-430F-A89C-2AEFCDDAF2E6}.Release|x86.Build.0 = Release|Win32
+		{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}.Debug|x64.ActiveCfg = Debug|x64
+		{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}.Debug|x64.Build.0 = Debug|x64
+		{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}.Debug|x86.ActiveCfg = Debug|Win32
+		{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}.Debug|x86.Build.0 = Debug|Win32
+		{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}.Release|x64.ActiveCfg = Release|x64
+		{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}.Release|x64.Build.0 = Release|x64
+		{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}.Release|x86.ActiveCfg = Release|Win32
+		{7C1491DA-9B9B-AAAE-C26E-F7F43C25C9CD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

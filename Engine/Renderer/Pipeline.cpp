@@ -12,13 +12,24 @@ namespace nu
         }
     }
 
-    bool Pipeline::Create(const Shader& vertexShader, const Shader& fragmentShader, SDL_GPUDevice* gpuDevice, SDL_Window* window)
+    bool Pipeline::Create(
+        const Shader& vertexShader,
+        const Shader& fragmentShader,
+        SDL_GPUDevice* gpuDevice,
+        SDL_Window* window)
     {
         m_gpuDevice = gpuDevice;
 
+        if (!m_gpuDevice)
+        {
+            std::cerr << "GPU device is null." << std::endl;
+            return false;
+        }
+
         std::array colorTargetDescriptions{
             SDL_GPUColorTargetDescription{
-                .format = SDL_GetGPUSwapchainTextureFormat(m_gpuDevice, window)
+                .format = SDL_GetGPUSwapchainTextureFormat(
+                    m_gpuDevice, window)
             }
         };
 
@@ -27,13 +38,16 @@ namespace nu
             .fragment_shader = fragmentShader.m_gpuShader,
 
             .vertex_input_state = SDL_GPUVertexInputState{
-                .vertex_buffer_descriptions = m_vertexBufferDescriptions.data(),
-                .num_vertex_buffers = static_cast<uint32_t>(m_vertexBufferDescriptions.size()),
+                .vertex_buffer_descriptions =
+                    m_vertexBufferDescriptions.data(),
+                .num_vertex_buffers = static_cast<uint32_t>(
+                    m_vertexBufferDescriptions.size()),
                 .vertex_attributes = m_vertexAttributes.data(),
-                .num_vertex_attributes = static_cast<uint32_t>(m_vertexAttributes.size())
+                .num_vertex_attributes = static_cast<uint32_t>(
+                    m_vertexAttributes.size())
             },
 
-            .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
+            .primitive_type = m_primitiveType,
 
             .rasterizer_state = SDL_GPURasterizerState{
                 .fill_mode = SDL_GPU_FILLMODE_FILL,
@@ -42,16 +56,20 @@ namespace nu
             },
 
             .target_info = SDL_GPUGraphicsPipelineTargetInfo{
-                .color_target_descriptions = colorTargetDescriptions.data(),
-                .num_color_targets = static_cast<uint32_t>(colorTargetDescriptions.size())
+                .color_target_descriptions =
+                    colorTargetDescriptions.data(),
+                .num_color_targets = static_cast<uint32_t>(
+                    colorTargetDescriptions.size())
             }
         };
 
-        m_gpuPipeline = SDL_CreateGPUGraphicsPipeline(m_gpuDevice, &pipelineCreateInfo);
+        m_gpuPipeline = SDL_CreateGPUGraphicsPipeline(
+            m_gpuDevice, &pipelineCreateInfo);
 
         if (m_gpuPipeline == nullptr)
         {
-            std::cerr << "Could not create graphics pipeline: " << SDL_GetError() << std::endl;
+            std::cerr << "Could not create graphics pipeline: "
+                << SDL_GetError() << std::endl;
             return false;
         }
 
@@ -61,7 +79,8 @@ namespace nu
     void Pipeline::AddVertexBuffer(uint32_t pitch)
     {
         SDL_GPUVertexBufferDescription description{
-            .slot = static_cast<uint32_t>(m_vertexBufferDescriptions.size()),
+            .slot = static_cast<uint32_t>(
+                m_vertexBufferDescriptions.size()),
             .pitch = pitch,
             .input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX,
             .instance_step_rate = 0
@@ -70,7 +89,10 @@ namespace nu
         m_vertexBufferDescriptions.push_back(description);
     }
 
-    void Pipeline::AddVertexAttribute(uint32_t location, SDL_GPUVertexElementFormat format, uint32_t offset)
+    void Pipeline::AddVertexAttribute(
+        uint32_t location,
+        SDL_GPUVertexElementFormat format,
+        uint32_t offset)
     {
         SDL_GPUVertexAttribute attribute{
             .location = location,

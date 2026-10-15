@@ -1,6 +1,7 @@
 #pragma once
 #include "Resources/Resource.h"
 #include <SDL3/SDL.h>
+#include "Renderer/Renderer.h"
 
 namespace nu
 {
@@ -9,10 +10,10 @@ namespace nu
 	public:
 		~VertexBuffer();
 
-		bool Create(uint32_t vertexCount, uint32_t vertexSize, const uint8_t* data, SDL_GPUDevice* gpuDevice);
+		bool Create(uint32_t vertexCount, uint32_t vertexSize, const uint8_t* data,const Renderer& renderer);
 		
 		template<typename T>
-		bool Create(const std::vector<T>& vertices, SDL_GPUDevice* gpuDevice);
+		bool Create(const std::vector<T>& vertices, const Renderer& renderer);
 		
 		uint32_t GetVertexCount() const { return m_vertexCount; }
 
@@ -27,12 +28,12 @@ namespace nu
 	};
 
 	template<typename T>
-	inline bool VertexBuffer::Create(const std::vector<T>& vertices, SDL_GPUDevice* gpuDevice)
+	inline bool VertexBuffer::Create(const std::vector<T>& vertices, const Renderer& renderer)
 	{
 		return Create(
 			static_cast<uint32_t>(vertices.size()),
 			sizeof(T),
 			reinterpret_cast<const uint8_t*>(vertices.data()),
-			gpuDevice);
+			renderer);
 	}
 }

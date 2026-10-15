@@ -171,6 +171,9 @@
     <ClCompile Include="Renderer\VertexBuffer.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\IndexBuffer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h">
@@ -315,6 +318,9 @@
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\VertexBuffer.h">
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\IndexBuffer.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,6 +8,7 @@
 #include "../Renderer/Model.h"
 #include "../Math/MathUtils.h"
 #include "../Math/Rect.h"
+#include "../Renderer/IndexBuffer.h"
 
 using namespace nu;
 
@@ -258,6 +259,12 @@ void Renderer::SetVertexBuffer(const VertexBuffer& vertexBuffer)
 	SDL_BindGPUVertexBuffers(m_renderPass, 0, &binding, 1);
 }
 
+void nu::Renderer::SetIndexBuffer(const IndexBuffer& indexBuffer)
+{
+	SDL_GPUBufferBinding binding{ .buffer = indexBuffer.m_gpuBuffer, .offset = 0 };
+	SDL_BindGPUIndexBuffer(m_renderPass, &binding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
+}
+
 void nu::Renderer::SetVertexUniform(uint32_t slot, const void* data, uint32_t size)
 {
 	SDL_PushGPUVertexUniformData(m_cmdBuffer, slot, data, size);
@@ -274,6 +281,12 @@ void Renderer::Draw(uint32_t vertexCount)
 	//   first instance - 0, start at the first instance
 
 	SDL_DrawGPUPrimitives(m_renderPass, vertexCount, 1, 0, 0);
+}
+
+void nu::Renderer::DrawIndex(const IndexBuffer& indexBuffer)
+{
+
+	SDL_DrawGPUIndexedPrimitives(m_renderPass, indexBuffer.GetIndexCount(), 1, 0, 0, 0);
 }
 
 

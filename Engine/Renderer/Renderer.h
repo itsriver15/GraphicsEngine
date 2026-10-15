@@ -12,9 +12,12 @@ using namespace nu;
 namespace nu {
 	class Renderer
 	{
+		friend class IndexBuffer;
 		friend class Text;
 		friend class Texture;
 		friend class Shader;
+		friend class VertexBuffer;
+		
 
 	public:
 		bool Initialize(int, int);
@@ -54,8 +57,10 @@ namespace nu {
 
 		void SetPipeline(const class Pipeline& pipeline);
 		void SetVertexBuffer(const class VertexBuffer& vertexBuffer);
+		void SetIndexBuffer(const class IndexBuffer& indexBuffer);
 		void SetVertexUniform(uint32_t slot, const void* data, uint32_t size);
 		void Draw(uint32_t vertexCount);
+		void DrawIndex(const class IndexBuffer& indexBuffer);
 
 
 

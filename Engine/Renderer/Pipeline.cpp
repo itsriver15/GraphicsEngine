@@ -47,11 +47,11 @@ namespace nu
                     m_vertexAttributes.size())
             },
 
-            .primitive_type = m_primitiveType,
+            .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
 
             .rasterizer_state = SDL_GPURasterizerState{
                 .fill_mode = SDL_GPU_FILLMODE_FILL,
-                .cull_mode = SDL_GPU_CULLMODE_BACK,
+                .cull_mode = SDL_GPU_CULLMODE_NONE,
                 .front_face = SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE
             },
 
@@ -103,4 +103,8 @@ namespace nu
 
         m_vertexAttributes.push_back(attribute);
     }
+  /*  void Pipeline::AddIndexBuffer()
+    {
+        
+    }*/
 }

@@ -13,7 +13,7 @@ namespace nu
         }
     }
 
-    bool Shader::Load(const std::string& filename, Renderer& renderer)
+    bool Shader::Load(const std::string& filename, Renderer& renderer, uint32_t uniformCount, uint32_t samplerCount)
     {
         m_gpuDevice = renderer.GetGPUDevice();
 
@@ -91,7 +91,8 @@ namespace nu
             .entrypoint = entrypoint,
             .format = format,
             .stage = stage,
-            .num_uniform_buffers = 1
+            .num_samplers = samplerCount,
+            .num_uniform_buffers = uniformCount,
         };
 
         // Create the GPU shader.

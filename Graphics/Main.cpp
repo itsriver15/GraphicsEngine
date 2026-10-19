@@ -46,8 +46,6 @@ int main() {
     
     SetWorkingDirectory("Assets");
 
-
-
     //INITALIZE
     Engine::Get().Initialize();
 
@@ -56,10 +54,10 @@ int main() {
     vb->Create<Vertex>(vertices, Engine::Get().GetRenderer());
 
     auto ib = std::make_shared<IndexBuffer>();
-	ib->Create(indices.size(), indices.data(), Engine::Get().GetRenderer());
+	ib->Create((uint32_t)indices.size(), indices.data(), Engine::Get().GetRenderer());
 
-    auto vshader = Resources().Get<nu::Shader>("shaders/position.vert", Engine::Get().GetRenderer());
-    auto fshader = Resources().Get<nu::Shader>("shaders/color.frag", Engine::Get().GetRenderer());
+    auto vshader = Resources().Get<nu::Shader>("shaders/unlit.vert", Engine::Get().GetRenderer(), 1);
+    auto fshader = Resources().Get<nu::Shader>("shaders/unlit.frag", Engine::Get().GetRenderer(), 1);
 
     auto pipeline = std::make_shared<Pipeline>();
     pipeline->AddVertexBuffer(sizeof(Vertex));
@@ -70,7 +68,7 @@ int main() {
 
     pipeline->AddVertexAttribute(
         1,
-        SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4,
+        SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2,
         offsetof(Vertex, color));
 
     if (!pipeline->Create(
@@ -88,6 +86,8 @@ int main() {
     {
         glm::mat4 mvp;
     };
+
+    Transform transform;
 
     vertexUniform uniform;
 
@@ -118,37 +118,22 @@ int main() {
 		color.r = sin(time * 10.0f) * 0.5f + 0.5f;
 
         //GRAPHICS
-        rotationAngle += dt * glm::radians(90.0f);
-		//MODEL MATRIX
-        //1 0 0 0
-		//0 1 0 0
-		//0 0 1 0
-		//0 0 0 1
-        /*uniform.model = glm::mat4{ 1.0f };
-        uniform.model = glm::translate(uniform.model, glm::vec3(0.5f, 0.0f, 0.0f));
-        uniform.model = glm::rotate(uniform.model, rotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
-        uniform.model = glm::scale(uniform.model, glm::vec3(0.5f, 0.5f, 0.5f));*/
-
-		
-        //1 0 0 x
-        //0 1 0 y
-        //0 0 1 z
-        //0 0 0 1
-        auto mxt = glm::translate(glm::vec3{ 0.0f, 0.0f, 0.0f });
-        auto mxr = glm::eulerAngleYXZ(0.0f, 0.0f, time * 3.0f);
-		
-        //x 0 0 0
-        //0 y 0 0
-        //0 0 z 0
-        //0 0 0 1
-        auto mxs = glm::scale(glm::vec3(0.5f, 0.5f, 0.5f));
-		auto model = mxt * mxr * mxs;
-
+        //MOVEMENT
+       /*if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_A)) direction.x = -1;
+        if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_D)) direction.x = +1;
+        if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_Q)) direction.y = -1;
+        if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_E)) direction.y = +1;
+        if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_W)) direction.z = -1;
+        if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_S)) direction.z = +1;*/
+        //TRANSFORM
+        
+        transform.rotation.z = time * 90;
 		//VIEW MATRIX
         auto view = glm::lookAtRH(glm::vec3{ 0,0,5 }, glm::vec3{ 0 }, glm::vec3{ 0,1,0 });
 
 		//PROJECTION MATRIX
-        uniform.mvp = model;
+        uniform.mvp = transform.GetMatrix();
+        
 
         // RENDER
         Engine::Get().GetRenderer().BeginFrame();

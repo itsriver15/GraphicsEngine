@@ -4,6 +4,7 @@
 #include <rapidjson/document.h>
 #include <string>
 #include <vector>
+#include <glm/glm.hpp>
 
 #define JSON_READ_NAME(value, name, data) json::Read(value, name, data)
 #define JSON_READ(value, data) json::Read(value, #data, data)
@@ -32,7 +33,7 @@ namespace nu::json
 	bool Read(const value_t& value, const std::string& name, bool& data, bool required = false);
 	bool Read(const value_t& value, const std::string& name, std::string& data, bool required = false);
 	bool Read(const value_t& value, const std::string& name, Vector2& data, bool required = false);
-	bool Read(const value_t& value, const std::string& name, Vector3& data, bool required = false);
+	bool Read(const value_t& value, const std::string& name, glm::vec3& data, bool required = false);
 	bool Read(const value_t& value, const std::string& name, std::vector<int>& data, bool required = false);
 
 

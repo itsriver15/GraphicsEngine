@@ -19,7 +19,7 @@ namespace nu {
     struct ActorDesc {
         std::string name;
         std::string tag;
-        Transform transform = Transform{ Vector2 {0.0f, 0.0f}, 0.0f, 0.0f };
+        Transform transform = Transform{ {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f} };
         Vector2 velocity{ 0.0f,0.0f };
         float damping{ 0.0f };
         float lifespan{ 0 };
@@ -55,14 +55,14 @@ namespace nu {
         void SetTransform(const Transform transform) {
             m_transform = transform;
         }
-        void SetTransform(const Vector2& position, float rotation, float scale) {
+        void SetTransform(const glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
             SetPosition(position);
             SetRotation(rotation);
             SetScale(scale);
         }
-        void SetPosition(const Vector2& position) { m_transform.position = position; }
-        void SetRotation(float rotation) { m_transform.rotation = rotation; }
-        void SetScale(float scale) { m_transform.scale = scale; }
+        void SetPosition(const glm::vec3 position) { m_transform.position = position; }
+        void SetRotation(glm::vec3 rotation) { m_transform.rotation = rotation; }
+        void SetScale(glm::vec3 scale) { m_transform.scale = scale; }
 
         const Vector2 GetVelocity() const { return m_velocity; }
         void SetVelocity(const Vector2& velocity) { m_velocity = velocity; }
@@ -101,7 +101,7 @@ namespace nu {
 
         std::string m_tag;
 
-        Transform m_transform = { {0.0f,0.0f}, 0.0f, 0.0f };
+        Transform m_transform = { {0.0f,0.0f, 0.0f}, {0.0f,0.0f, 0.0f}, {1.0f,1.0f,1.0f} };
         Vector2 m_velocity{ 0.0f, 0.0f };
         float m_damping{ 0.0f };
         float m_lifespan{ 0 };

@@ -3,7 +3,6 @@
 #include "../Framework/Actor.h"
 #include "../Core/Factory.h"
 #include "../Renderer/Renderer.h"
-#include "Components/CircleColliderComponent.h"
 
 
 namespace nu {

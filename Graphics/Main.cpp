@@ -43,7 +43,7 @@ std::vector<uint32_t> indices = {
 
 
 int main() {
-
+    
     SetWorkingDirectory("Assets");
 
 

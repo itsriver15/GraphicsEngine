@@ -39,9 +39,6 @@
 //resources
 #include "../Engine/Resources/ResourceManager.h"
 
-//physics
-#include "../Engine/Physics/Physics.h"
-
 //framework
 #include "../Engine/Framework/Actor.h"
 #include "../Engine/Framework/Scene.h"
@@ -66,7 +63,7 @@ namespace nu {
 		Time& GetTime() { return m_time; }
 		Audio& GetAudio() { return m_audio; }
 		ParticleSystem& GetPS() { return m_particleSystem; }
-		Physics& GetPhysics() { return m_physics; }
+
 
 	private:
 		Engine() = default;
@@ -76,7 +73,7 @@ namespace nu {
 		Renderer m_renderer;
 		Time m_time;
 		ParticleSystem m_particleSystem;
-		Physics m_physics;
+
 	};
 	extern Engine engine;
 }

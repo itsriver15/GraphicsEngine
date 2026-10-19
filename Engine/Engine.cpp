@@ -10,7 +10,6 @@ namespace nu {
 		m_particleSystem.Initialize();
 		m_audio.Initialize();
 		m_input.Initialize();
-		m_physics.Initialize();
 
 		
 
@@ -21,7 +20,6 @@ namespace nu {
 		m_audio.Shutdown();
 		m_particleSystem.Shutdown();
 		m_renderer.Shutdown();
-		m_physics.Shutdown();
 		
 	}
 
@@ -30,7 +28,6 @@ namespace nu {
 		m_input.Update();
 		m_particleSystem.Update(m_time.GetDeltaTime());
 		m_audio.Update();
-		m_physics.Update(m_time.GetDeltaTime());
 		
 	}
 	

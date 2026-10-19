@@ -105,31 +105,6 @@ void Renderer::DrawRect(float x, float y, float w, float h) const {
 	SDL_RenderRect(renderer, &rect);
 }
 
-void Renderer::DrawModel (const class Model& model, const struct Transform& transform) const
-{
-	
-	for (auto mesh : model.GetMeshes()) {
-		auto& points = mesh.GetPoints();
-		SetColor(mesh.GetColor().r, mesh.GetColor().g, mesh.GetColor().b, 1.0f);
-
-
-		for (int i = 0; i + 1 < mesh.GetPoints().size(); i++) {
-			Vector2 v1 = points.at(i);
-			Vector2 v2 = points.at(i + 1);
-
-			v1 *= transform.scale;
-			v2 *= transform.scale;
-
-			v1 = v1.Rotate(transform.rotation * DegToRad);
-			v2 = v2.Rotate(transform.rotation * DegToRad);
-
-			v1 += transform.position;
-			v2 += transform.position;
-			DrawLine(v1.x, v1.y, v2.x, v2.y);
-		}
-	}
-
-}
 
 void Renderer::DrawTexture(const class Texture& texture, float x, float y, float angle, float scale, bool fliph, const Vector2& origin) const
 {

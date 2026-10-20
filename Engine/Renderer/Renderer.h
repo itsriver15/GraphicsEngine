@@ -3,8 +3,6 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_Image/SDL_image.h>
 #include "Math/Transform.h"
-#include "Renderer/Mesh.h"
-#include "Renderer/Model.h"
 #include "Math/Vector2.h"
 
 using namespace nu;

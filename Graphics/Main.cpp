@@ -50,7 +50,7 @@ int main() {
     Engine::Get().Initialize();
 
 
-    auto vb = std::make_shared<VertexBuffer>();
+    /*auto vb = std::make_shared<VertexBuffer>();
     vb->Create<Vertex>(vertices, Engine::Get().GetRenderer());
 
     auto ib = std::make_shared<IndexBuffer>();
@@ -80,7 +80,24 @@ int main() {
         std::cerr << "Pipeline creation failed; stopping.\n";
         Engine::Get().Shutdown();
         return -1;
-    }
+    }*/
+    auto model = Resources().Get<Model>("models/suzanne.obj", Engine::Get().GetRenderer());
+
+    auto vshader = Resources().Get<nu::Shader>("shaders/unlit.vert", Engine::Get().GetRenderer(), 1);
+    auto fshader = Resources().Get<nu::Shader>("shaders/unlit.frag", Engine::Get().GetRenderer(), 1);
+
+    auto pipeline = std::make_shared<Pipeline>();
+
+    pipeline->AddVertexBuffer(sizeof(Model::Vertex));
+    pipeline->AddVertexAttribute(0, SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3, offsetof(Model::Vertex, position));
+    pipeline->AddVertexAttribute(1, SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2, offsetof(Model::Vertex, texcoord));
+    pipeline->AddVertexAttribute(2, SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3, offsetof(Model::Vertex, normal));
+    pipeline->AddVertexAttribute(3, SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3, offsetof(Model::Vertex, tangent));
+
+    pipeline->Create(*vshader.get(), *fshader.get(),
+        Engine::Get().GetRenderer().GetGPUDevice(),
+        Engine::Get().GetRenderer().GetWindow());
+
     Color4 color{ 0,0,0,1 };
     struct vertexUniform
     {
@@ -88,6 +105,11 @@ int main() {
     };
 
     Transform transform;
+
+    glm::vec3 cameraPosition{ 0.0f, 0.0f, 5.0f };
+    glm::vec3 direction{ 0.0f };
+
+    float cameraSpeed = 5.0f;
 
     vertexUniform uniform;
 
@@ -119,31 +141,57 @@ int main() {
 
         //GRAPHICS
         //MOVEMENT
-       /*if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_A)) direction.x = -1;
+        direction = glm::vec3(0.0f);
+
+        if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_A)) direction.x = -1;
         if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_D)) direction.x = +1;
         if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_Q)) direction.y = -1;
         if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_E)) direction.y = +1;
         if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_W)) direction.z = -1;
-        if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_S)) direction.z = +1;*/
+        if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_S)) direction.z = +1;
+
+        cameraPosition += direction * cameraSpeed * dt;
+
         //TRANSFORM
         
         transform.rotation.z = time * 90;
 		//VIEW MATRIX
-        auto view = glm::lookAtRH(glm::vec3{ 0,0,5 }, glm::vec3{ 0 }, glm::vec3{ 0,1,0 });
+        auto view = glm::lookAtRH(cameraPosition, cameraPosition + glm::vec3{ 0.0f, 0.0f, -1.0f }, glm::vec3{ 0.0f, 1.0f, 0.0f });
+
+        int width = 1;
+        int height = 1;
+
+		SDL_GetWindowSize(Engine::Get().GetRenderer().GetWindow(), &width, &height);
+        
+		if (height < 1) height = 1;
 
 		//PROJECTION MATRIX
-        uniform.mvp = transform.GetMatrix();
+		float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+
+		auto projection = glm::perspectiveRH(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
+
+		uniform.mvp = projection * view * transform.GetMatrix();
         
 
         // RENDER
+        //Engine::Get().GetRenderer().BeginFrame();
+
+        //Engine::Get().GetRenderer().SetPipeline(*pipeline);
+        //Engine::Get().GetRenderer().SetVertexBuffer(*vb);
+        //Engine::Get().GetRenderer().SetVertexUniform(0, &uniform, sizeof(uniform));
+        //Engine::Get().GetRenderer().SetIndexBuffer(*ib);
+        ////Engine::Get().GetRenderer().Draw(vb->GetVertexCount());
+        //Engine::Get().GetRenderer().DrawIndex(*ib);
+
+        //Engine::Get().GetRenderer().EndFrame();
+
         Engine::Get().GetRenderer().BeginFrame();
 
         Engine::Get().GetRenderer().SetPipeline(*pipeline);
-        Engine::Get().GetRenderer().SetVertexBuffer(*vb);
         Engine::Get().GetRenderer().SetVertexUniform(0, &uniform, sizeof(uniform));
-        Engine::Get().GetRenderer().SetIndexBuffer(*ib);
-        //Engine::Get().GetRenderer().Draw(vb->GetVertexCount());
-        Engine::Get().GetRenderer().DrawIndex(*ib);
+        //Engine::Get().GetRenderer().SetVertexUniform(0, &color, sizeof(color));
+
+        model->Draw(Engine::Get().GetRenderer());
 
         Engine::Get().GetRenderer().EndFrame();
        

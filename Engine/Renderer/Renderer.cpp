@@ -49,6 +49,7 @@ bool Renderer::Initialize(int width, int height)
 	// print out the driver being utilized (e.g., "vulkan" or "d3d12")
 	std::cout << "GPU Driver Initialized: " << SDL_GetGPUDeviceDriver(m_gpuDevice) << std::endl;
 
+	CreateDepthBuffer();
 
 	return true;
 
@@ -105,56 +106,6 @@ void Renderer::DrawRect(float x, float y, float w, float h) const {
 	SDL_RenderRect(renderer, &rect);
 }
 
-
-void Renderer::DrawTexture(const class Texture& texture, float x, float y, float angle, float scale, bool fliph, const Vector2& origin) const
-{
-	Vector2 size = texture.GetSize();
-
-	float cameraX = (m_cameraEnabled) ? (m_camera.x - m_width * origin.x) : 0.0f;
-	float cameraY = (m_cameraEnabled) ? (m_camera.y - m_height * origin.y): 0.0f;
-	
-	SDL_FRect destRect;
-	destRect.w = size.x * scale;
-	destRect.h = size.y * scale;
-
-	destRect.x = (x - cameraX) - (destRect.w * origin.x);
-	destRect.y = (y - cameraY) - (destRect.h * origin.y);
-
-
-	// https://wiki.libsdl.org/SDL3/SDL_RenderTexture
-	SDL_RenderTextureRotated(renderer, texture.m_texture, NULL, &destRect, angle, NULL, (fliph) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
-}
-
-void nu::Renderer::DrawTexture(const Texture& texture, const Rect& source, float x, float y, float angle, float scale, bool fliph, const Vector2& origin) const
-{
-
-	float cameraX = (m_cameraEnabled) ? (m_camera.x - m_width * origin.x) : 0.0f;
-	float cameraY = (m_cameraEnabled) ? (m_camera.y - m_height * origin.y) : 0.0f;
-
-	SDL_FRect sourceRect;
-	sourceRect.x = source.x;
-	sourceRect.y = source.y;
-	sourceRect.w = source.w;
-	sourceRect.h = source.h;
-
-	SDL_FRect destRect;
-	destRect.w = source.w * scale;
-	destRect.h = source.h * scale;
-
-	destRect.x = (x - cameraX) - (destRect.w * origin.x);
-	destRect.y = (y - cameraY) - (destRect.h * origin.y);
-
-
-	SDL_SetTextureScaleMode(texture.m_texture, SDL_SCALEMODE_PIXELART);
-
-
-	// https://wiki.libsdl.org/SDL3/SDL_RenderTexture
-	SDL_RenderTextureRotated(renderer, texture.m_texture, &sourceRect, &destRect, angle, NULL, (fliph) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
-
-
-
-}
-
 bool Renderer::BeginFrame()
 {
 	m_cmdBuffer = SDL_AcquireGPUCommandBuffer(m_gpuDevice);
@@ -176,11 +127,9 @@ bool Renderer::BeginFrame()
 		return false;
 	}
 
-	if (swapchainTexture == nullptr)
+	if (swapchainTexture != nullptr)
 	{
-		m_renderPass = nullptr;
-		return true;
-	}
+	
 
 	SDL_GPUColorTargetInfo colorTargetInfo{};
 	colorTargetInfo.texture = swapchainTexture;
@@ -188,8 +137,17 @@ bool Renderer::BeginFrame()
 	colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
 	colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
 
+	// configure the depth target (This handles the depth sorting)
+	SDL_GPUDepthStencilTargetInfo depthTargetInfo = {};
+	depthTargetInfo.texture = m_depthTexture;
+	depthTargetInfo.clear_depth = 1.0f;
+	depthTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
+	depthTargetInfo.store_op = SDL_GPU_STOREOP_DONT_CARE;
+	depthTargetInfo.stencil_load_op = SDL_GPU_LOADOP_DONT_CARE;
+	depthTargetInfo.stencil_store_op = SDL_GPU_STOREOP_DONT_CARE;
+
 	m_renderPass = SDL_BeginGPURenderPass(
-		m_cmdBuffer, &colorTargetInfo, 1, nullptr);
+		m_cmdBuffer, &colorTargetInfo, 1, &depthTargetInfo);
 
 	if (!m_renderPass)
 	{
@@ -198,6 +156,7 @@ bool Renderer::BeginFrame()
 		SDL_CancelGPUCommandBuffer(m_cmdBuffer);
 		m_cmdBuffer = nullptr;
 		return false;
+	}
 	}
 
 	return true;
@@ -218,6 +177,23 @@ bool Renderer::EndFrame() const
 	}
 
 	return true;
+}
+
+void nu::Renderer::CreateDepthBuffer()
+{
+	SDL_GPUTextureCreateInfo depthInfo{
+		.type = SDL_GPU_TEXTURETYPE_2D,
+		.format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT,
+		.usage = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET,
+		.width = (uint32_t)m_width,
+		.height = (uint32_t)m_height,
+		.layer_count_or_depth = 1,
+		.num_levels = 1,
+		.sample_count = SDL_GPU_SAMPLECOUNT_1,
+	};
+
+
+	m_depthTexture = SDL_CreateGPUTexture(m_gpuDevice, &depthInfo);
 }
 
 void Renderer::SetPipeline(const Pipeline& pipeline)
@@ -264,6 +240,15 @@ void nu::Renderer::DrawIndex(const IndexBuffer& indexBuffer)
 	SDL_DrawGPUIndexedPrimitives(m_renderPass, indexBuffer.GetIndexCount(), 1, 0, 0, 0);
 }
 
+void Renderer::SetFragmentTexture(uint32_t slot, const Texture& texture)
+{
+	SDL_GPUTextureSamplerBinding binding
+	{
+		.texture = texture.m_gpuTexture,
+		.sampler = texture.m_gpuSampler
+	};
 
+	SDL_BindGPUFragmentSamplers(m_renderPass, slot, &binding, 1);
+}
 
 

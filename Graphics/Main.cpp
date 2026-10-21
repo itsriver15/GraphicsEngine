@@ -81,10 +81,11 @@ int main() {
         Engine::Get().Shutdown();
         return -1;
     }*/
-    auto model = Resources().Get<Model>("models/suzanne.obj", Engine::Get().GetRenderer());
+    auto model = Resources().Get<Model>("models/spot.obj", Engine::Get().GetRenderer());
+    auto texture = Resources().Get<Texture>("textures/spot_diffuse.png", Engine::Get().GetRenderer());
 
     auto vshader = Resources().Get<nu::Shader>("shaders/unlit.vert", Engine::Get().GetRenderer(), 1);
-    auto fshader = Resources().Get<nu::Shader>("shaders/unlit.frag", Engine::Get().GetRenderer(), 1);
+    auto fshader = Resources().Get<nu::Shader>("shaders/unlit.frag", Engine::Get().GetRenderer(), 1, 1);
 
     auto pipeline = std::make_shared<Pipeline>();
 
@@ -154,7 +155,7 @@ int main() {
 
         //TRANSFORM
         
-        transform.rotation.z = time * 90;
+        transform.rotation.y = time * 90;
 		//VIEW MATRIX
         auto view = glm::lookAtRH(cameraPosition, cameraPosition + glm::vec3{ 0.0f, 0.0f, -1.0f }, glm::vec3{ 0.0f, 1.0f, 0.0f });
 
@@ -189,6 +190,7 @@ int main() {
 
         Engine::Get().GetRenderer().SetPipeline(*pipeline);
         Engine::Get().GetRenderer().SetVertexUniform(0, &uniform, sizeof(uniform));
+        Engine::Get().GetRenderer().SetFragmentTexture(0, *texture);
         //Engine::Get().GetRenderer().SetVertexUniform(0, &color, sizeof(color));
 
         model->Draw(Engine::Get().GetRenderer());

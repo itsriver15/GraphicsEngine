@@ -11,7 +11,6 @@
 //renderer
 #include "../Engine/Renderer/Renderer.h"
 #include "../Engine/Renderer/Mesh.h"
-#include "../Engine/Renderer/Text.h"
 #include "../Engine/Renderer/ParticleSystem.h"
 #include "../Engine/Renderer/Texture.h"
 #include "../Engine/Renderer/Shader.h"

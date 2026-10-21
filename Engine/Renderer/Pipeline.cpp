@@ -51,15 +51,23 @@ namespace nu
 
             .rasterizer_state = SDL_GPURasterizerState{
                 .fill_mode = SDL_GPU_FILLMODE_FILL,
-                .cull_mode = SDL_GPU_CULLMODE_NONE,
+                .cull_mode = SDL_GPU_CULLMODE_BACK,
                 .front_face = SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE
             },
+
+            .depth_stencil_state = SDL_GPUDepthStencilState{
+                .compare_op = SDL_GPU_COMPAREOP_LESS,
+				.enable_depth_test = true,
+                .enable_depth_write = true
+             },
 
             .target_info = SDL_GPUGraphicsPipelineTargetInfo{
                 .color_target_descriptions =
                     colorTargetDescriptions.data(),
                 .num_color_targets = static_cast<uint32_t>(
-                    colorTargetDescriptions.size())
+                    colorTargetDescriptions.size()),
+				.depth_stencil_format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT,
+                .has_depth_stencil_target = true
             }
         };
 

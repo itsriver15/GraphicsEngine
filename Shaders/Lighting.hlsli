@@ -4,7 +4,7 @@
 #define LIGHT_POINT 1
 #define LIGHT_SPOT 2
 
-static const uint MAX_LIGHTS = 8;
+#define MAX_LIGHTS 8
 
 
 struct Material
@@ -13,6 +13,7 @@ struct Material
     float2 tiling;
     float2 offset;
     float shininess;
+    float3 padding1;
     
 };
 
@@ -31,19 +32,12 @@ struct Light
     
 };
 
-//in lightuniform Light light[8] turns into lights[MAX_LIGHTS]
-// add uint numLights
-// add float3 ambient
-// add to frag lightUniform
-//normalize V
-//set diffuse albedo
-//for (uint i = 0; i < numLights; i++){
-//flat3 diffuse = 0;
-//float specular = 0;
-//calculateLighting(lights[i], material, input.worldPosition);
-//}
-///output.color = float4(albedo.rgb * diffuse + specular, albedo.a);
 
+float calculateAttenuation(float distance, float range)
+{
+    return pow(1 - saturate(distance / range), 2);
+
+}
 
 float3 getLightVector(Light light, float3 position, out float attenuation)
 {
@@ -56,15 +50,64 @@ float3 getLightVector(Light light, float3 position, out float attenuation)
             L = normalize(-light.direction);
             break;
         case LIGHT_POINT:
-            L = normalize(light.position - position);
+            {
+                float3 toLight = light.position - position;
+                float distance = length(toLight);
+                attenuation = calculateAttenuation(distance, light.range);
+            
+                L = toLight / distance;
+            }
             break;
         case LIGHT_SPOT:
-            L = normalize(light.position - position);
-            attenuation = smoothstep(light.outerCutoff, light.innerCutoff, dot(-L, light.direction));
+            {
+                float3 toLight = light.position - position;
+                float distance = length(toLight);
+                L = toLight / distance;
+                attenuation = calculateAttenuation(distance, light.range);
+                attenuation *= smoothstep(light.outerCutoff, light.innerCutoff, dot(-L, light.direction));
+
+            }
             break;
     }
     
     return L;
 
+}
+
+float3 calculateDiffuse(float3 radiance, float3 N, float3 L)
+{
+    float NdotL = saturate(dot(N, L));
+    return radiance * NdotL;
+
+}
+
+float3 calculateSpecular(float3 radiance, float3 N, float3 L, float3 V, Material mat)
+{
+    float3 specular = float3(0, 0, 0);
+    
+    if (dot(N, L) > 0)
+    {
+        //blinn-phong specular
+        float3 H = normalize(V + L);
+        float HdotN = saturate(dot(H, N));
+        HdotN = pow(HdotN, mat.shininess);
+        
+        specular = radiance * HdotN;
     }
 
+    return specular;
+}
+
+void calculateLighting(Light light, Material material, float3 position, float3 N, float3 V, out float3 diffuse, out float3 specular)
+{
+    float attenuation;
+    
+    float3 L = getLightVector(light, position, attenuation);
+    
+    //light arriving at surface
+    float3 radiance = light.color * light.intensity * attenuation;
+    
+    diffuse += calculateDiffuse(radiance, N, L);
+    specular += calculateSpecular(radiance, N, L, V, material);
+
+}

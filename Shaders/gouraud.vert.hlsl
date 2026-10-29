@@ -43,32 +43,13 @@ Output main(Input input)
     
     float3 worldPosition = mul(model, float4(input.position, 1.0f)).xyz;
     
-    float3 radiance = light.color * light.intensity;
-    float attenuation;
-    float3 L = getLightVector(light, worldPosition, attenuation);
+  
     
     float3 N = normalize(mul((float3x3) model, input.normal));
-    //DIFFUSE
-    float NdotL = saturate(dot(N, L));
+    float3 V = normalize(cameraPosition - worldPosition);
     
-    float3 diffuse = radiance * NdotL * attenuation;
-    output.diffuse = light.ambient + diffuse;
-    
-    //SPECULAR
-    output.specular = float3(0, 0, 0);
-    
-    if (NdotL > 0)
-    {
-        //blinn-phong specular
-        float3 V = normalize(cameraPosition - worldPosition);
-        float3 H = normalize(V + L);
-   
-        float HdotN = saturate(dot(H, N));
-        
-        HdotN = pow(HdotN, material.shininess);
-        
-        output.specular = radiance * HdotN * attenuation;
-    }
+    calculateLighting(light, material, worldPosition, N, V, output.diffuse, output.specular);
+
   
     return output;
 }

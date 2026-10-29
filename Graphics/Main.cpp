@@ -88,6 +88,7 @@ int main() {
 
 	struct MaterialUniform
 	{
+		glm::vec4 color;
 		glm::vec2 tiling;
 		glm::vec2 offset;
 		float shininess;
@@ -95,6 +96,7 @@ int main() {
 
 
 	MaterialUniform materialUniform{
+		.color{1,1,1,1},
 		.tiling {0.0f, 0.0f},
 		.offset {1.0f},
 		.shininess{32.0f}
@@ -104,20 +106,24 @@ int main() {
 		glm::vec3 position;
 		uint32_t type;
 		glm::vec3 direction;
-		float padding1;
+		float range;
 		glm::vec3 color;
 		float intensity;
 		glm::vec3 ambient;
-		float padding2;
+		float innerCutoff;
+		float outerCutoff;
 	};
 
 	LightUniform lightUniform{
 		.position = {2.0f, 2.0f, 3.0f},
 		.type = uint32_t(LightType::Point),
 		.direction = glm::vec3(0.0f, -1.0f, 0.0f),
+		.range = {10.0f},
 		.color = {1.0f, 0.0f, 1.0f},
 		.intensity = 0.5f,
-		.ambient = {0.3f, 0.3f, 0.3f}
+		.ambient = {0.3f, 0.3f, 0.3f},
+		.innerCutoff {0.2f},
+		.outerCutoff{2.0f}
 	};
 
 	Transform transform;
@@ -168,6 +174,11 @@ int main() {
 
 		if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_1)) lightUniform.type = 0;
 		if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_2)) lightUniform.type = 1;
+		if (Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_3)) {
+			lightUniform.type = 2;
+			lightUniform.position = glm::vec3{ 0,2,0 };
+			lightUniform.direction = { 0, 1, 0 };
+		}
 
 		materialUniform.tiling = glm::vec2{ 2.0f };
 
@@ -188,6 +199,8 @@ int main() {
 
 		//PROJECTION MATRIX
 		float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+
+		//FOV
 
 		auto projection = glm::perspectiveRH(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
 
@@ -215,7 +228,7 @@ int main() {
 		Engine::Get().GetRenderer().SetVertexUniform(1, &lightUniform, sizeof(lightUniform));
 		Engine::Get().GetRenderer().SetVertexUniform(2, &materialUniform, sizeof(materialUniform));
 		Engine::Get().GetRenderer().SetFragmentTexture(0, *texture);
-		Engine::Get().GetRenderer().SetFragmentUniform(0, &color, sizeof(color));
+		Engine::Get().GetRenderer().SetFragmentUniform(0, &materialUniform, sizeof(color));
 
 		model->Draw(Engine::Get().GetRenderer());
 

@@ -27,11 +27,16 @@
     <FxCompile Include="unlit.frag.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
-    <FxCompile Include="lit.vert.hlsl">
+    <FxCompile Include="gouraud.frag.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
-    <FxCompile Include="lit.frag.hlsl">
+    <FxCompile Include="gouraud.vert.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Lighting.hlsli">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -251,4 +251,8 @@ void Renderer::SetFragmentTexture(uint32_t slot, const Texture& texture)
 	SDL_BindGPUFragmentSamplers(m_renderPass, slot, &binding, 1);
 }
 
+void Renderer::SetFragmentUniform(uint32_t slot, const void* data, uint32_t size) {
+
+	SDL_PushGPUFragmentUniformData(m_cmdBuffer, slot, data, size);
+}
 

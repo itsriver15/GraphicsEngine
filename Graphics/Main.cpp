@@ -101,7 +101,7 @@ Light light2{
 		.type = uint32_t(LightType::Point),
 		.direction = glm::vec3(0.0f, -1.0f, 0.0f),
 		.range = {10.0f},
-		.color = {1.0f, 0.0f, 1.0f},
+		.color = {1.0f, 1.0f, 1.0f},
 		.intensity = 0.5f,
 		.ambient = {0.3f, 0.3f, 0.3f},
 		.innerCutoff {0.2f},
@@ -148,8 +148,8 @@ int main() {
 	LightUniform lightUniform;
 
 	lightUniform.lights[0] = light1;
-	//lightUniform.lights[1] = light2;
-	lightUniform.numLights = 1;
+	lightUniform.lights[1] = light2;
+	lightUniform.numLights = 2;
 	lightUniform.ambient = glm::vec3{ 0.2f };
 
 	glm::vec3 direction{ 0.0f };
@@ -202,8 +202,8 @@ int main() {
 		transform.rotation.y = 180.0f;
 		vertexUniform.cameraPosition += direction * cameraSpeed * dt;
 
-		lightUniform.lights[1].position = glm::eulerAngleY(time * 4) * glm::vec4{ 0, 0, 10, 1 };
-		//lightUniform.lights[2].position = glm::eulerAngleX(time * 4) * glm::vec4{ 0, 0, 10, 1 };
+		lightUniform.lights[0].position = glm::eulerAngleY(time * 4) * glm::vec4{ 0, 0, 10, 1 };
+		lightUniform.lights[1].position = glm::eulerAngleX(time * 2) * glm::vec4{ 0, 0, 10, 1 };
 
 
 		/*materialUniform.tiling = glm::vec2{ 2.0f };*/

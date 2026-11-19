@@ -1,13 +1,14 @@
 #include "../Engine/Engine.h"
 #include "../Engine/Renderer/IndexBuffer.h"
+#include "../Engine/Renderer/Uniforms.h"
 
 #include <iostream>
 #include <random>
 #include <vector>
 
 
-#define CHECK_UNIFORM_BOUNDARY(T) static_assert((sizeof(T) % 16) == 0);
-#define MAX_LIGHTS 8
+
+
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
@@ -19,64 +20,6 @@
 
 using namespace nu;
 using namespace std;
-
-enum class LightType : uint32_t {
-	Directional,
-	Point,
-	Spot
-};
-
-struct Color4
-{
-	float r, g, b, a;
-};
-
-struct Vertex
-{
-	Vector3 position;
-	Color4 color;
-};
-
-struct Light {
-	glm::vec3 position;
-	uint32_t type;
-	glm::vec3 direction;
-	float range;
-	glm::vec3 color;
-	float intensity;
-	glm::vec3 ambient;
-	float innerCutoff;
-	float outerCutoff;
-	glm::vec3 padding;
-};
-
-struct LightUniform {
-	Light lights[MAX_LIGHTS];
-	uint32_t numLights;
-	glm::vec3 ambient;
-};
-
-Color4 color{ 1,1,1,1 };
-
-struct VertexUniform
-{
-	glm::mat4 mvp;
-	glm::mat4 model;
-	glm::vec3 cameraPosition;
-	float padding1;
-};
-
-VertexUniform vertexUniform;
-
-struct MaterialUniform
-{
-	glm::vec4 color;
-	glm::vec2 tiling;
-	glm::vec2 offset;
-	float shininess;
-	glm::vec3 padding;
-};
-
 
 MaterialUniform materialUniform{
 	.color{1,1,1,1},
@@ -122,9 +65,7 @@ Light light3{
 
 
 
-CHECK_UNIFORM_BOUNDARY(LightUniform)
-CHECK_UNIFORM_BOUNDARY(VertexUniform)
-CHECK_UNIFORM_BOUNDARY(MaterialUniform)
+
 
 
 int main() {
@@ -158,7 +99,7 @@ int main() {
 	Transform transform;
 	transform.scale = glm::vec3{ 4.0f };
 
-	LightUniform lightUniform;
+	LightUniform lightUniform{};
 
 	lightUniform.lights[0] = light1;
 	lightUniform.lights[1] = light2;
@@ -223,7 +164,7 @@ int main() {
 		transform.rotation.y = 180.0f;
 		vertexUniform.cameraPosition += direction * cameraSpeed * dt;
 
-		lightUniform.lights[0].direction = glm::eulerAngleY(time * 4) * glm::vec4{ 0, 0, 10, 1 };
+		lightUniform.lights[0].direction = glm::eulerAngleY(time * 4) * glm::vec4{ 0, 0, 10, 0 };
 
 
 		/*materialUniform.tiling = glm::vec2{ 2.0f };*/

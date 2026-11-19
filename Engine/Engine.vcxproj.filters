@@ -168,6 +168,12 @@
     <ClCompile Include="..\ThirdParty\imgui\imgui_widgets.cpp">
       <Filter>Header Files\Editor\ImGUI</Filter>
     </ClCompile>
+    <ClCompile Include="ModelComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\CameraControllerComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h">
@@ -310,6 +316,15 @@
     </ClInclude>
     <ClInclude Include="..\ThirdParty\imgui\imstb_truetype.h">
       <Filter>Header Files\Editor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\CameraControllerComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Uniforms.h">
+      <Filter>Source Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

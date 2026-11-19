@@ -87,19 +87,19 @@ MaterialUniform materialUniform{
 
 Light light1{
 		.position = {2.0f, 2.0f, 3.0f},
-		.type = uint32_t(LightType::Point),
+		.type = uint32_t(LightType::Directional),
 		.direction = glm::vec3(0.0f, -1.0f, 0.0f),
 		.range = {10.0f},
 		.color = {1.0f, 0.0f, 1.0f},
-		.intensity = 0.5f,
+		.intensity = .25f,
 		.ambient = {0.3f, 0.3f, 0.3f},
-		.innerCutoff {0.2f},
-		.outerCutoff{2.0f}
+		.innerCutoff {0.5f},
+		.outerCutoff{3.0f}
 };
 Light light2{
-		.position = {2.0f, 2.0f, 3.0f},
+		.position = {-1.0f, -5.0f, 3.0f},
 		.type = uint32_t(LightType::Point),
-		.direction = glm::vec3(0.0f, -1.0f, 0.0f),
+		.direction = glm::vec3(0.0f, 1.0f, 0.0f),
 		.range = {10.0f},
 		.color = {1.0f, 1.0f, 1.0f},
 		.intensity = 0.5f,
@@ -107,6 +107,19 @@ Light light2{
 		.innerCutoff {0.2f},
 		.outerCutoff{2.0f}
 };
+
+Light light3{
+		.position = {2.0f, 2.0f, 3.0f},
+		.type = uint32_t(LightType::Point),
+		.direction = glm::vec3(0.0f, -1.0f, 0.0f),
+		.range = {10.0f},
+		.color = {0.0f, 1.0f, 1.0f},
+		.intensity = 1.0f,
+		.ambient = {0.3f, 0.3f, 0.3f},
+		.innerCutoff {0.2f},
+		.outerCutoff{2.0f}
+};
+
 
 
 CHECK_UNIFORM_BOUNDARY(LightUniform)
@@ -149,7 +162,8 @@ int main() {
 
 	lightUniform.lights[0] = light1;
 	lightUniform.lights[1] = light2;
-	lightUniform.numLights = 2;
+	lightUniform.lights[2] = light3;
+	lightUniform.numLights = 3;
 	lightUniform.ambient = glm::vec3{ 0.2f };
 
 	glm::vec3 direction{ 0.0f };
@@ -164,8 +178,11 @@ int main() {
 	{
 		SDL_Event event;
 
+
 		while (SDL_PollEvent(&event))
 		{
+		Engine::Get().GetEditor().ProcessEvent(event);
+
 			if (event.type == SDL_EVENT_QUIT)
 				quit = true;
 
@@ -174,8 +191,12 @@ int main() {
 				quit = true;
 		}
 		//UPDATE
+		// 
+		
 		//ENGINE
 		Engine::Get().Update();
+
+	
 
 		float dt = Engine::Get().GetTime().GetDeltaTime();
 		auto time = Engine::Get().GetTime().GetTime();
@@ -202,8 +223,7 @@ int main() {
 		transform.rotation.y = 180.0f;
 		vertexUniform.cameraPosition += direction * cameraSpeed * dt;
 
-		lightUniform.lights[0].position = glm::eulerAngleY(time * 4) * glm::vec4{ 0, 0, 10, 1 };
-		lightUniform.lights[1].position = glm::eulerAngleX(time * 2) * glm::vec4{ 0, 0, 10, 1 };
+		lightUniform.lights[0].direction = glm::eulerAngleY(time * 4) * glm::vec4{ 0, 0, 10, 1 };
 
 
 		/*materialUniform.tiling = glm::vec2{ 2.0f };*/
@@ -247,6 +267,10 @@ int main() {
 
 		//Engine::Get().GetRenderer().EndFrame();
 
+		//EDITOR
+		Engine::Get().GetEditor().BeginFrame();
+		Engine::Get().GetEditor().Update();
+
 		Engine::Get().GetRenderer().BeginFrame();
 
 		Engine::Get().GetRenderer().SetPipeline(*pipeline);
@@ -262,6 +286,9 @@ int main() {
 		Engine::Get().GetRenderer().SetFragmentTexture(0, *texture);
 
 		model->Draw(Engine::Get().GetRenderer());
+
+		Engine::Get().GetRenderer().EndRenderPass();
+	    Engine::Get().GetEditor().Draw(Engine::Get().GetRenderer());
 
 		Engine::Get().GetRenderer().EndFrame();
 

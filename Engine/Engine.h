@@ -43,6 +43,9 @@
 #include "../Engine/Framework/Scene.h"
 #include "../Engine/Framework/Game.h"
 
+//editor
+#include "../Engine/Editor/Editor.h"
+
 #include <iostream>
 #include <vector>
 
@@ -62,6 +65,7 @@ namespace nu {
 		Time& GetTime() { return m_time; }
 		Audio& GetAudio() { return m_audio; }
 		ParticleSystem& GetPS() { return m_particleSystem; }
+		Editor& GetEditor() { return *m_editor; }
 
 
 	private:
@@ -72,6 +76,7 @@ namespace nu {
 		Renderer m_renderer;
 		Time m_time;
 		ParticleSystem m_particleSystem;
+		std::unique_ptr<Editor> m_editor;
 
 	};
 	extern Engine engine;

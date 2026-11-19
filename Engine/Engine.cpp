@@ -10,6 +10,8 @@ namespace nu {
 		m_particleSystem.Initialize();
 		m_audio.Initialize();
 		m_input.Initialize();
+		m_editor = make_unique<Editor>();
+		m_editor->Initialize(m_renderer);
 
 		
 
@@ -20,7 +22,7 @@ namespace nu {
 		m_audio.Shutdown();
 		m_particleSystem.Shutdown();
 		m_renderer.Shutdown();
-		
+		m_editor->Shutdown();
 	}
 
 	void Engine::Update() {

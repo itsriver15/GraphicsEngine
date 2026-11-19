@@ -44,12 +44,24 @@ bool Renderer::Initialize(int width, int height)
 	}
 
 	// claim the window for our modern GPU context
-	SDL_ClaimWindowForGPUDevice(m_gpuDevice, window);
+	if (!SDL_ClaimWindowForGPUDevice(m_gpuDevice, window)) {
+		std::cerr << "Failed to claim window: " << SDL_GetError() << '\n';
+		return false;
+	}
+	
 
 	// print out the driver being utilized (e.g., "vulkan" or "d3d12")
 	std::cout << "GPU Driver Initialized: " << SDL_GetGPUDeviceDriver(m_gpuDevice) << std::endl;
 
 	CreateDepthBuffer();
+	if (!m_depthTexture)
+	{
+		std::cerr << "DEPTH TEXTURE CREATION FAILED: "
+			<< SDL_GetError() << '\n';
+		return false;
+	}
+
+	std::cout << "Depth texture created successfully!\n";
 
 	return true;
 
@@ -116,9 +128,9 @@ bool Renderer::BeginFrame()
 		return false;
 	}
 
-	SDL_GPUTexture* swapchainTexture = nullptr;
+    m_swapchainTexture = nullptr;
 	if (!SDL_WaitAndAcquireGPUSwapchainTexture(
-		m_cmdBuffer, window, &swapchainTexture, nullptr, nullptr))
+		m_cmdBuffer, window, &m_swapchainTexture, nullptr, nullptr))
 	{
 		std::cerr << "Could not acquire swapchain texture: "
 			<< SDL_GetError() << std::endl;
@@ -127,12 +139,19 @@ bool Renderer::BeginFrame()
 		return false;
 	}
 
-	if (swapchainTexture != nullptr)
+	if (!m_swapchainTexture)
+	{
+		SDL_SubmitGPUCommandBuffer(m_cmdBuffer);
+		m_cmdBuffer = nullptr;
+		return false;
+	}
+
+	if (m_swapchainTexture != nullptr)
 	{
 	
 
 	SDL_GPUColorTargetInfo colorTargetInfo{};
-	colorTargetInfo.texture = swapchainTexture;
+	colorTargetInfo.texture = m_swapchainTexture;
 	colorTargetInfo.clear_color = SDL_FColor{ 0.5f, 0.5f, 0.5f, 1.0f };
 	colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
 	colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
@@ -162,7 +181,7 @@ bool Renderer::BeginFrame()
 	return true;
 }
 
-bool Renderer::EndFrame() const
+bool Renderer::EndFrame()
 {
 	if (m_renderPass != nullptr)
 	{
@@ -176,8 +195,22 @@ bool Renderer::EndFrame() const
 		return false;
 	}
 
+	m_cmdBuffer = nullptr;
+	m_swapchainTexture = nullptr;
+
+
 	return true;
 }
+
+void Renderer::EndRenderPass()
+{
+	if (m_renderPass != nullptr)
+	{
+		SDL_EndGPURenderPass(m_renderPass);
+		m_renderPass = nullptr;
+	}
+}
+
 
 void nu::Renderer::CreateDepthBuffer()
 {
@@ -194,6 +227,12 @@ void nu::Renderer::CreateDepthBuffer()
 
 
 	m_depthTexture = SDL_CreateGPUTexture(m_gpuDevice, &depthInfo);
+
+	if (!m_depthTexture)
+	{
+		std::cerr << "Failed to create depth texture: "
+			<< SDL_GetError() << '\n';
+	}
 }
 
 void Renderer::SetPipeline(const Pipeline& pipeline)

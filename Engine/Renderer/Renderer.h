@@ -25,12 +25,13 @@ namespace nu {
 		void Present() const;
 
 		bool BeginFrame();
-		bool EndFrame() const;
+		bool EndFrame();
+		void EndRenderPass();
 
 		void SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255) const;
 		void SetColor(float r, float g, float b, float = 1.0f) const;
 
-
+		
 		void DrawPoint(float x, float y) const;
 		void DrawLine(float x1, float y1, float x2, float y2) const;
 		void DrawFillRect(float x, float y, float w, float h) const;
@@ -46,6 +47,8 @@ namespace nu {
 
 		SDL_GPUDevice* GetGPUDevice() const { return m_gpuDevice; }
 		SDL_Window* GetWindow() const { return window; }
+		SDL_GPUCommandBuffer* GetGPUCommandBuffer() const { return m_cmdBuffer; }
+		SDL_GPUTexture* GetGPUSwapchainTexture() const { return m_swapchainTexture; }
 
 		void CreateDepthBuffer();
 
@@ -57,6 +60,7 @@ namespace nu {
 		void SetFragmentTexture(uint32_t slot, const Texture& texture);
 		void SetFragmentUniform(uint32_t slot, const void* data, uint32_t size);
 		void DrawIndex(const class IndexBuffer& indexBuffer);
+
 
 
 
@@ -72,6 +76,7 @@ namespace nu {
 		SDL_GPUCommandBuffer* m_cmdBuffer = nullptr;
 		SDL_GPURenderPass* m_renderPass = nullptr;
 		SDL_GPUTexture* m_depthTexture = nullptr;
+		SDL_GPUTexture* m_swapchainTexture = nullptr;
 
 		int m_width = 0;
 		int m_height = 0;
